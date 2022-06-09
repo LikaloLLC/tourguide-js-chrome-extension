@@ -1,0 +1,18 @@
+{
+  "name": "Tour Guide",
+  "description": "",
+  "version": "1.0.0",
+  "manifest_version": 3,
+  "action": {
+    "default_icon": {
+      "16": "images/gray.png",
+      "24": "images/gray.png",
+      "32": "images/gray.png"
+    }
+  },
+  "background": {
+    "service_worker": "scripts/background.js"
+  },
+  "permissions": ["activeTab", "scripting"],
+  "host_permissions": ["<all_urls>"]
+}
