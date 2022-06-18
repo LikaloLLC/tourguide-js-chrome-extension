@@ -1,8 +1,8 @@
 {
-  "name": "Tour Guide",
-  "description": "",
-  "version": "1.0.0",
   "manifest_version": 3,
+  "name": "Tour Guide",
+  "version": "1.0.0",
+
   "action": {
     "default_icon": {
       "16": "images/gray.png",
@@ -10,9 +10,23 @@
       "32": "images/gray.png"
     }
   },
+  "description": "",
+
   "background": {
     "service_worker": "scripts/background.js"
   },
-  "permissions": ["activeTab", "scripting"],
-  "host_permissions": ["<all_urls>"]
+  "content_scripts": [
+    {
+      "matches": ["https://app.docsie.io/*"],
+      "js": ["scripts/docsie.js"]
+    }
+  ],
+  "permissions": ["activeTab", "scripting", "webNavigation"],
+  "host_permissions": ["<all_urls>"],
+  "web_accessible_resources": [
+    {
+      "resources": ["pages/iframe.html"],
+      "matches": ["<all_urls>"]
+    }
+  ]
 }
