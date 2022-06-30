@@ -9,6 +9,7 @@
   "dependencies": {
     "bootstrap": "^4.6.0",
     "css-selector-generator": "^3.6.1",
+    "immer": "^9.0.15",
     "pick-dom-element": "github:bordot/pick-dom-element",
     "react": "^18.1.0",
     "react-dom": "^18.1.0"

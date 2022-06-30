@@ -1,5 +1,5 @@
-import inputText from '../utils/inputText';
-import querySelector from '../utils/querySelector';
+import { inputText } from '../utils/inputText';
+import { querySelector } from '../utils/querySelector';
 
 const li = document.createElement('li');
 li.className = 'docsie-menu-item';
@@ -8,10 +8,8 @@ li.dataset.component = 'headertoolbaraction';
 const button = document.createElement('button');
 button.className = 'docsie-button docsie-button-selected';
 button.onclick = () => {
-  const title = document.querySelector<HTMLInputElement>('#name').value;
-
-  const steps = [...document.querySelectorAll<HTMLLIElement>('.docsie-tour-step-container')].map((container) => {
-    const step = { title: '', content: '', selector: '' };
+  const doc = [...document.querySelectorAll<HTMLLIElement>('.docsie-tour-step-container')].map((container) => {
+    const step: Step = { title: '', content: '', selector: '' };
 
     const edit = container.querySelector('.icon.icon--pencil').parentElement;
     edit.click();
@@ -31,9 +29,17 @@ button.onclick = () => {
     return step;
   });
 
-  console.log(title, steps);
+  const name = document.querySelector<HTMLInputElement>('#name').value;
+  const description = '';
 
-  chrome.runtime.sendMessage({ type: 'editOnSite', data: { title, steps } });
+  chrome.runtime.sendMessage({
+    type: 'EDIT_ON_SITE',
+    payload: {
+      doc,
+      name,
+      description,
+    },
+  });
 };
 
 const span = document.createElement('span');
@@ -51,7 +57,7 @@ const checkForTour = () => {
 };
 
 const buttonAdd = async () => {
-  const menu = await querySelector('.docsie-menu-list:nth-child(4)');
+  const menu = await querySelector<HTMLElement>('.docsie-menu-list:nth-child(4)');
   menu.insertAdjacentElement('afterbegin', li);
 };
 
@@ -65,34 +71,35 @@ window.addEventListener('locationchange', () => {
 
 checkForTour();
 
-const finishRecording = async (data: { title: string; steps: Step[] }) => {
-  console.log('finishRecording', data);
-  const title = document.querySelector<HTMLInputElement>('#name');
-  title.value = data.title;
+const sleep = (ms: number) => {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+};
+
+const finishRecording = async (payload: { name: string; doc: Step[]; description: string }) => {
+  console.log('finishRecording', payload);
+
+  const name = document.querySelector<HTMLInputElement>('#name');
+  inputText(name, payload.name);
 
   const containers = document.querySelectorAll<HTMLLIElement>('.docsie-tour-step-container');
+  const difference = payload.doc.length - containers.length;
 
-  if (data.steps.length !== containers.length) {
-    const difference = data.steps.length - containers.length;
-
-    if (difference > 0) {
-      for (let i = 0; i < difference; i++) {
-        const addStep = document.querySelector<HTMLLIElement>('.docsie-tour-steps > .box > button');
-        addStep.click();
-      }
-    }
-
-    if (difference < 0) {
-      // TODO: Delete extra steps
+  if (difference > 0) {
+    for (let i = 0; i < difference; i++) {
+      const addStep = await querySelector<HTMLLIElement>('.docsie-tour-steps > .box > button');
+      addStep.click();
+      await sleep(100);
     }
   }
 
-  for (let i = 0; i < data.steps.length; i++) {
-    const step = data.steps[i];
+  for (let i = 0; i < payload.doc.length; i++) {
+    const step = payload.doc[i];
     const container = document.querySelectorAll<HTMLLIElement>('.docsie-tour-step-container')[i];
+    console.log('edit', container);
 
     const edit = container.querySelector('.icon.icon--pencil').parentElement;
     edit.click();
+   // await sleep(10);
 
     const title = container.querySelector<HTMLInputElement>('#title');
     inputText(title, step.title);
@@ -105,11 +112,40 @@ const finishRecording = async (data: { title: string; steps: Step[] }) => {
 
     const save = container.querySelector('.icon.icon--save').parentElement;
     save.click();
+    // await sleep(10);
+  }
+
+  if (difference < 0) {
+    const length = containers.length;
+
+    for (let i = 0; i < Math.abs(difference); i++) {
+      const container = document.querySelectorAll<HTMLLIElement>('.docsie-tour-step-container')[length - 1 - i];
+      console.log('delete', container);
+
+      const more = await querySelector<SVGElement>('.icon.icon--more', container);
+      more.parentElement.click();
+      await sleep(100);
+
+      const trash = await querySelector<SVGElement>('.icon.icon--trash');
+      trash.parentElement.click();
+      await sleep(100);
+
+      const confirmation = await querySelector<HTMLInputElement>('[name="confirmation"]');
+      confirmation.parentElement.click();
+      await sleep(100);
+
+      const confirm = await querySelector<HTMLButtonElement>('[type="submit"]');
+      confirm.click();
+      await sleep(1000);
+    }
   }
 };
 
 chrome.runtime.onMessage.addListener((message) => {
-  if (message.type === 'finishRecording') {
-    finishRecording(message.data);
+  switch (message.type) {
+    case 'RECORDING_FINISH': {
+      finishRecording(message.payload);
+      break;
+    }
   }
 });

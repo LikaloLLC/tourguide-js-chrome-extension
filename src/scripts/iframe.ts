@@ -1,34 +1,32 @@
+const heightMaximized = '350px';
+const heightMinimized = '55px';
+
+const heightSet = (height: typeof heightMaximized | typeof heightMinimized) => {
+  iframe.style.height = height;
+  document.body.style.marginBottom = height;
+};
+
 const iframe = document.createElement('iframe');
-iframe.src = chrome.runtime.getURL('pages/iframe.html');
+iframe.src = chrome.runtime.getURL('pages/iframe/index.html');
 iframe.style.position = 'fixed';
 iframe.style.bottom = '0';
 iframe.style.left = '0';
-iframe.style.height = '350px';
 iframe.style.width = '100vw';
-iframe.style.zIndex = '999999999'
-
+iframe.style.zIndex = '999999999';
 document.body.append(iframe);
 
+heightSet(heightMaximized);
 
-const marginBottom = document.body.style.marginBottom;
-document.body.style.marginBottom = iframe.style.height;
+chrome.runtime.onMessage.addListener((message) => {
+  switch (message.type) {
+    case 'IFRAME_MAXIMIZE': {
+      heightSet(heightMaximized);
+      break;
+    }
 
-function onMessage(message: any) {
-  console.log('onMessage', message);
-
-  if (message.minimize) {
-    iframe.style.height = '55px';
+    case 'IFRAME_MINIMIZE': {
+      heightSet(heightMinimized);
+      break;
+    }
   }
-
-  if (message.maximize) {
-    iframe.style.height = '350px';
-  }
-
-  if (message.remove) {
-    iframe.remove();
-    document.body.style.marginBottom = marginBottom;
-    chrome.runtime.onMessage.removeListener(onMessage);
-  }
-}
-
-chrome.runtime.onMessage.addListener(onMessage);
+});
