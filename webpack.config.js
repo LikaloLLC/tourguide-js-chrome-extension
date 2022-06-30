@@ -3,7 +3,7 @@ const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   entry: {
-    'pages/iframe': './src/pages/iframe.tsx',
+    'pages/iframe/index': './src/pages/iframe/index.tsx',
     'scripts/background': '/src/scripts/background.ts',
     'scripts/docsie': './src/scripts/docsie.ts',
     'scripts/iframe': './src/scripts/iframe.ts',
@@ -23,7 +23,7 @@ module.exports = {
       },
       {
         test: /\.css$/i,
-        use: ["style-loader", "css-loader"],
+        use: ['style-loader', 'css-loader'],
       },
     ],
   },
@@ -42,8 +42,8 @@ module.exports = {
           to: './images',
         },
         {
-          from: './src/pages/iframe.html',
-          to: './pages',
+          from: './src/pages/iframe/index.html',
+          to: './pages/iframe',
         },
       ],
     }),

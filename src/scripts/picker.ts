@@ -9,19 +9,27 @@ const picker = new ElementPicker({
 });
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  console.log('onMessage', message);
+  switch (message.type) {
+    case 'IFRAME_MAXIMIZE': {
+      picker.stop();
+      break;
+    }
 
-  if (message.openPicker) {
-    picker.start({
-      onHover: (el) => {
-        console.log('hover', { el: el, querySelector: getCssSelector(el) });
-      },
-      onClick: (el) => {
-        picker.stop();
-        console.log('click', { el: el, querySelector: getCssSelector(el) });
-        //sendResponse({ el: el, querySelector: getCssSelector(el) });
-        chrome.runtime.sendMessage({ pickerValue: { querySelector: getCssSelector(el) }, stepIndex: message.step });
-      },
-    });
+    case 'PICKER_OPEN': {
+      picker.start({
+        onClick: (el) => {
+          chrome.runtime.sendMessage({
+            type: 'PICKER_VALUE',
+            payload: {
+              value: getCssSelector(el),
+              index: message.payload,
+            },
+          });
+
+          picker.stop();
+        },
+      });
+      break;
+    }
   }
 });

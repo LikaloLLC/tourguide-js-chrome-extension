@@ -1,64 +1,88 @@
 const editOnTab: {
   [tabId: number]: {
     openerTabId: number;
-    title: string;
-    steps: [
-      {
-        title: string;
-        content: string;
-        selector: string;
-      }
-    ];
+    doc: Step[];
+    name: string;
+    description: string;
   };
 } = {};
 
 chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
   console.log('onMessage', message);
 
-  if (message.minimize) {
-    chrome.tabs.sendMessage(sender.tab.id, { minimize: true });
-  }
-  if (message.openPicker) {
-    chrome.tabs.sendMessage(sender.tab.id, { openPicker: true, step: message.step, minimize: true }, (response) => {
-      console.log(response);
-    });
-  }
-  if (message.pickerValue) {
-    console.log(message.pickerValue);
-    chrome.tabs.sendMessage(sender.tab.id, { pickerValue: message.pickerValue, maximize: true });
-  }
+  switch (message.type) {
+    case 'EDIT_ON_SITE': {
+      const tab = await chrome.tabs.create({ url: 'https://www.google.com/' });
+      editOnTab[tab.id] = message.payload;
+      editOnTab[tab.id].openerTabId = sender.tab.id;
+      break;
+    }
 
-  if (message.type === 'editOnSite') {
-    const tab = await chrome.tabs.create({ url: 'https://www.google.com/' });
-    editOnTab[tab.id] = message.data;
-    editOnTab[tab.id].openerTabId = sender.tab.id;
-  }
+    case 'EDIT_ON_TAB': {
+      chrome.tabs.sendMessage(sender.tab.id, {
+        type: 'EDIT_ON_TAB',
+        payload: editOnTab[sender.tab.id],
+      });
+      break;
+    }
 
-  if (message.type === 'editOnTab') {
-  }
+    case 'IFRAME_MAXIMIZE': {
+      chrome.tabs.sendMessage(sender.tab.id, {
+        type: 'IFRAME_MAXIMIZE',
+      });
+      break;
+    }
 
-  if (message.type === 'finishRecording') {
-    chrome.tabs.sendMessage(editOnTab[sender.tab.id].openerTabId, { type: 'finishRecording', data: message.data });
-    chrome.tabs.update(editOnTab[sender.tab.id].openerTabId, { highlighted: true });
-    chrome.tabs.remove(sender.tab.id);
+    case 'IFRAME_MINIMIZE': {
+      chrome.tabs.sendMessage(sender.tab.id, {
+        type: 'IFRAME_MINIMIZE',
+      });
+      break;
+    }
+
+    case 'PICKER_OPEN': {
+      chrome.tabs.sendMessage(sender.tab.id, {
+        type: 'PICKER_OPEN',
+        payload: message.payload,
+      });
+      break;
+    }
+
+    case 'PICKER_VALUE': {
+      chrome.tabs.sendMessage(sender.tab.id, {
+        type: 'PICKER_VALUE',
+        payload: message.payload,
+        // pickerValue: message.pickerValue,
+        // maximize: true,
+      });
+      break;
+    }
+
+    case 'RECORDING_CANCEL': {
+      const openerTabId = editOnTab[sender.tab.id].openerTabId;
+      chrome.tabs.update(openerTabId, { highlighted: true });
+      chrome.tabs.remove(sender.tab.id);
+      break;
+    }
+
+    case 'RECORDING_FINISH': {
+      const openerTabId = editOnTab[sender.tab.id].openerTabId;
+      chrome.tabs.sendMessage(openerTabId, {
+        type: 'RECORDING_FINISH',
+        payload: message.payload,
+      });
+      chrome.tabs.update(openerTabId, { highlighted: true });
+      chrome.tabs.remove(sender.tab.id);
+      break;
+    }
   }
 });
 
-chrome.webNavigation.onCompleted.addListener(async (details) => {
+chrome.webNavigation.onCompleted.addListener((details) => {
   if (details.frameId === 0 && editOnTab[details.tabId]) {
-    await chrome.scripting.executeScript({
+    chrome.scripting.executeScript({
       target: { tabId: details.tabId },
       files: ['/scripts/iframe.js', '/scripts/picker.js'],
     });
-
-    // TODO: Change this to wait for a message and respond to know the tab has been loaded.
-    setTimeout(async () => {
-      await chrome.tabs.sendMessage(details.tabId, {
-        type: 'editOnTab',
-        data: editOnTab[details.tabId],
-      });
-    }, 100);
   }
 });
-
-console.log('test');

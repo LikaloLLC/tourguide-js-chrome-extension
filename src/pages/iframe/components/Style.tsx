@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Style() {
+export const Style = () => {
   return (
     <style>{`html {
 	font-size: 12px;
@@ -50,6 +50,4 @@ function Style() {
 	pointer-events: none;
 }`}</style>
   );
-}
-
-export default Style;
+};

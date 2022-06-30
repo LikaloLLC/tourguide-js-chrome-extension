@@ -1,21 +1,19 @@
-function querySelector(selector: string): Promise<Element> {
+export const querySelector = <T>(selector: string, parentNode?: ParentNode): Promise<T> => {
   return new Promise((resolve) => {
     let count = 0;
 
-    function checkForElement() {
+    const checkForElement = () => {
       count++;
 
-      const element = document.querySelector(selector);
+      const element = (parentNode || document).querySelector(selector);
 
       if (element) {
-        resolve(element);
+        resolve(element as unknown as T);
       } else {
         setTimeout(checkForElement, 10);
       }
-    }
+    };
 
     checkForElement();
   });
-}
-
-export default querySelector;
+};
