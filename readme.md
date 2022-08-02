@@ -1,3 +1,5 @@
-run `npm i` to install packages
-run `npm run build` to build the extension
+To install packages run: `run npm i`  
+To build the extension run `npm run build`  
+To enable the watch mode, run: `npm run devw`.
+
 load unpacked the `/build` folder generated from `npm run build`
