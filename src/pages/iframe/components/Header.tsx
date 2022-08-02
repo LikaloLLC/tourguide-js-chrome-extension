@@ -18,11 +18,19 @@ export const Header = () => {
     });
   };
 
-  function recordingFinish() {
+  async function recordingFinish() {
+    const getCurrentUrl = async (): Promise<string> => {
+      const queryOptions = { active: true, lastFocusedWindow: true };
+      const [tab] = await chrome.tabs.query(queryOptions);
+
+      return tab?.url;
+    };
+
     chrome.runtime.sendMessage({
       type: 'RECORDING_FINISH',
       payload: {
-        description: window.location.href,
+        // description: window.location.href,
+        description: await getCurrentUrl(),
         doc: iframeContext.state.doc,
         name: iframeContext.state.name,
       },
