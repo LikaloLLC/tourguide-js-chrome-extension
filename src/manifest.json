@@ -21,6 +21,10 @@
       "js": ["scripts/docsie.js"]
     }
   ],
+  "externally_connectable": {
+    "ids": ["namnffimcbmhcpkllhaookfikmllhned"],
+    "matches": ["https://app.docsie.io/*", "https://beta.docsie.io/*"]
+  },
   "permissions": ["activeTab", "scripting", "webNavigation"],
   "host_permissions": ["<all_urls>"],
   "web_accessible_resources": [

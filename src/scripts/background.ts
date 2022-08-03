@@ -1,3 +1,5 @@
+import { getCurrentUrl } from '../utils/getCurrentUrl';
+
 const editOnTab: {
   [tabId: number]: {
     openerTabId: number;
@@ -7,12 +9,25 @@ const editOnTab: {
   };
 } = {};
 
+let memoUrl = '';
+let newUrl = '';
+
+chrome.runtime.onMessageExternal.addListener((message, sender, sendResponse) => {
+  console.log('onMessageExternal', message);
+
+  memoUrl = message.description;
+
+  memoUrl !== newUrl && sendResponse(newUrl);
+
+  return true;
+});
+
 chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
   console.log('onMessage', message);
 
   switch (message.type) {
     case 'EDIT_ON_SITE': {
-      const tab = await chrome.tabs.create({ url: 'https://www.google.com/' });
+      const tab = await chrome.tabs.create({ url: memoUrl });
       editOnTab[tab.id] = message.payload;
       editOnTab[tab.id].openerTabId = sender.tab.id;
       break;
@@ -66,6 +81,8 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
     }
 
     case 'RECORDING_FINISH': {
+      newUrl = await getCurrentUrl();
+
       const openerTabId = editOnTab[sender.tab.id].openerTabId;
       chrome.tabs.sendMessage(openerTabId, {
         type: 'RECORDING_FINISH',
