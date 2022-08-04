@@ -3,3 +3,5 @@ interface Step {
   content: string;
   selector: string;
 }
+
+declare module 'tourguidejs';

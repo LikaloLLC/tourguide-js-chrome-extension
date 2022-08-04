@@ -13,7 +13,8 @@
     "immer": "^9.0.15",
     "pick-dom-element": "github:bordot/pick-dom-element",
     "react": "^18.1.0",
-    "react-dom": "^18.1.0"
+    "react-dom": "^18.1.0",
+    "tourguidejs": "^0.3.0"
   },
   "devDependencies": {
     "@types/chrome": "^0.0.190",

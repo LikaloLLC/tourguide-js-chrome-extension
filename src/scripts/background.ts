@@ -80,6 +80,14 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
       break;
     }
 
+    case 'SHOWING_PREVIEW': {
+      chrome.tabs.sendMessage(sender.tab.id, {
+        type: 'SHOWING_PREVIEW',
+        payload: message.payload,
+      });
+      break;
+    }
+
     case 'RECORDING_FINISH': {
       newUrl = await getCurrentUrl();
 
@@ -99,7 +107,7 @@ chrome.webNavigation.onCompleted.addListener((details) => {
   if (details.frameId === 0 && editOnTab[details.tabId]) {
     chrome.scripting.executeScript({
       target: { tabId: details.tabId },
-      files: ['/scripts/iframe.js', '/scripts/picker.js'],
+      files: ['/scripts/iframe.js', '/scripts/picker.js', '/scripts/preview.js'],
     });
   }
 });

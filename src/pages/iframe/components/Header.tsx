@@ -19,6 +19,15 @@ export const Header = () => {
     });
   };
 
+  function showingPreview() {
+    chrome.runtime.sendMessage({
+      type: 'SHOWING_PREVIEW',
+      payload: {
+        doc: iframeContext.state.doc,
+      },
+    });
+  }
+
   async function recordingFinish() {
     chrome.runtime.sendMessage({
       type: 'RECORDING_FINISH',
@@ -96,7 +105,7 @@ export const Header = () => {
               Start recording
             </button>
             <button className="btn btn-outline-secondary" onClick={() => recordingCancel()}>
-              Cancel
+              Discard
             </button>
           </>
         ) : (
@@ -105,7 +114,10 @@ export const Header = () => {
               Minimize
             </button>
             <button className="btn btn-outline-secondary" onClick={() => recordingCancel()}>
-              Cancel
+              Discard
+            </button>
+            <button className="btn btn-secondary" onClick={() => showingPreview()}>
+              Preview
             </button>
             <button className="btn btn-primary" onClick={() => recordingFinish()}>
               Finish recording
