@@ -1,5 +1,3 @@
-import { getCurrentUrl } from '../utils/getCurrentUrl';
-
 const editOnTab: {
   [tabId: number]: {
     openerTabId: number;
@@ -10,14 +8,20 @@ const editOnTab: {
 } = {};
 
 let memoUrl = '';
-let newUrl = '';
+let state = { doc: { steps: <Step[]>[] }, name: '', description: '' };
+
+const hasTheContentChange = (firstContent: unknown, secondContent: unknown): boolean => {
+  return JSON.stringify(firstContent) !== JSON.stringify(secondContent);
+};
 
 chrome.runtime.onMessageExternal.addListener((message, sender, sendResponse) => {
   console.log('onMessageExternal', message);
 
   memoUrl = message.description;
 
-  memoUrl !== newUrl && sendResponse(newUrl);
+  if (Object.entries(editOnTab).length > 0) {
+    hasTheContentChange(message, state) && sendResponse(state);
+  }
 
   return true;
 });
@@ -89,7 +93,7 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
     }
 
     case 'RECORDING_FINISH': {
-      newUrl = await getCurrentUrl();
+      state = message.payload;
 
       const openerTabId = editOnTab[sender.tab.id].openerTabId;
       chrome.tabs.sendMessage(openerTabId, {
