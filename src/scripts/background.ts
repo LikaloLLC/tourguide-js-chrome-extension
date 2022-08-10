@@ -93,13 +93,19 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
     }
 
     case 'RECORDING_FINISH': {
+      const openerTabId = editOnTab[sender.tab.id].openerTabId;
       state = message.payload;
 
-      const openerTabId = editOnTab[sender.tab.id].openerTabId;
-      chrome.tabs.sendMessage(openerTabId, {
-        type: 'RECORDING_FINISH',
-        payload: message.payload,
+      chrome.scripting.executeScript({
+        target: { tabId: openerTabId },
+        func: (state) => {
+          this.window.addEventListener('click', function () {
+            this.dispatchEvent(new CustomEvent('data', { bubbles: true, detail: state }));
+          });
+        },
+        args: [state],
       });
+
       chrome.tabs.update(openerTabId, { highlighted: true });
       chrome.tabs.remove(sender.tab.id);
       break;

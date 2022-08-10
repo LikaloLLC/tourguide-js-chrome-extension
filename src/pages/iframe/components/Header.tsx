@@ -33,7 +33,9 @@ export const Header = () => {
       type: 'RECORDING_FINISH',
       payload: {
         description: await getCurrentUrl(),
-        doc: iframeContext.state.doc,
+        doc: {
+          steps: iframeContext.state.doc,
+        },
         name: iframeContext.state.name,
       },
     });
