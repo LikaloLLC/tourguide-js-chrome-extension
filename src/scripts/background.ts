@@ -10,23 +10,13 @@ const editOnTab: {
 let memoUrl = '';
 let state = { doc: { steps: <Step[]>[] }, name: '', description: '' };
 
-const hasTheContentChange = (firstContent: unknown, secondContent: unknown): boolean => {
-  return JSON.stringify(firstContent) !== JSON.stringify(secondContent);
-};
-
-chrome.runtime.onMessageExternal.addListener((message, sender, sendResponse) => {
+chrome.runtime.onMessageExternal.addListener((message) => {
   console.log('onMessageExternal', message);
 
   memoUrl = message.description;
-
-  if (Object.entries(editOnTab).length > 0) {
-    hasTheContentChange(message, state) && sendResponse(state);
-  }
-
-  return true;
 });
 
-chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener(async (message, sender) => {
   console.log('onMessage', message);
 
   switch (message.type) {

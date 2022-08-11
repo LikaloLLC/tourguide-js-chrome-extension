@@ -8,13 +8,16 @@ const button = document.createElement('button');
 button.className = 'docsie-button docsie-button-selected';
 button.onclick = () => {
   const doc = [...document.querySelectorAll<HTMLLIElement>('.docsie-tour-step-container')].map((container, index) => {
-    const step: Step = { step: index + 1, title: '', content: '', selector: '' };
+    const step: Step = { step: index + 1, image: null, title: '', content: '', selector: '' };
 
     const edit = container.querySelector('.icon.icon--pencil').parentElement;
     edit.click();
 
     const title = container.querySelector<HTMLInputElement>('#title');
     step.title = title.value;
+
+    const img = container.querySelector<HTMLInputElement>('img');
+    step.image = img.src;
 
     const content = container.querySelector<HTMLTextAreaElement>('[id*=content]');
     step.content = content.value;

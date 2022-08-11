@@ -89,7 +89,7 @@ const reducer = (state: IframeContextState, action: IframeContextActions) =>
       }
 
       case 'STEP_ADD': {
-        draft.doc.push({ step: draft.doc.length + 1, title: '', content: '', selector: '' });
+        draft.doc.push({ step: draft.doc.length + 1, image: null, title: '', content: '', selector: '' });
         break;
       }
 
