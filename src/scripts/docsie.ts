@@ -59,8 +59,8 @@ const checkForTour = () => {
 };
 
 const buttonAdd = async () => {
-  const menu = await querySelector<HTMLElement>('.docsie-menu-list:nth-child(4)');
-  menu.insertAdjacentElement('afterbegin', li);
+  const menu = await querySelector<HTMLSpanElement>('#chrome-extension-placeholder');
+  menu.replaceChildren(li);
 };
 
 const buttonRemove = () => {
