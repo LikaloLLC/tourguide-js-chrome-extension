@@ -16,6 +16,7 @@ const startTourGuide = (steps: Step[]) => {
   const tourGuide = new Tourguide({
     onStart: iframeMinimize,
     steps,
+    onStop: iframeMaximize,
     onComplete: iframeMaximize,
   });
 
