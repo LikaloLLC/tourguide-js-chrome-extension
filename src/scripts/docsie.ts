@@ -17,7 +17,7 @@ button.onclick = () => {
     step.title = title.value;
 
     const img = container.querySelector<HTMLInputElement>('img');
-    step.image = img.src;
+    step.image = img.src === 'https://via.placeholder.com/240x120' ? null : img.src;
 
     const content = container.querySelector<HTMLTextAreaElement>('[id*=content]');
     step.content = content.value;
