@@ -45,18 +45,10 @@ export const Header = () => {
     chrome.runtime.sendMessage({
       type: 'IFRAME_MAXIMIZE',
     });
-
-    iframeContext.dispatch({
-      type: 'IFRAME_MAXIMIZE',
-    });
   };
 
   const iframeMinimize = () => {
     chrome.runtime.sendMessage({
-      type: 'IFRAME_MINIMIZE',
-    });
-
-    iframeContext.dispatch({
       type: 'IFRAME_MINIMIZE',
     });
   };
@@ -67,6 +59,26 @@ export const Header = () => {
       payload: value,
     });
   };
+
+  chrome.runtime.onMessage.addListener((message) => {
+    console.log('OnMessage - Header:', message);
+
+    switch (message.type) {
+      case 'IFRAME_MAXIMIZE': {
+        iframeContext.dispatch({
+          type: 'IFRAME_MAXIMIZE',
+        });
+        break;
+      }
+
+      case 'IFRAME_MINIMIZE': {
+        iframeContext.dispatch({
+          type: 'IFRAME_MINIMIZE',
+        });
+        break;
+      }
+    }
+  });
 
   if (iframeContext.state.minimized) {
     return (

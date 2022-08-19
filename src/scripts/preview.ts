@@ -2,6 +2,8 @@ import Tourguide from 'tourguidejs';
 import '../styles/tourguide.css';
 
 const startTourGuide = (steps: Step[]) => {
+  const cleanedSteps = steps.filter((step) => step.selector !== '');
+
   const iframeMinimize = () => {
     chrome.runtime.sendMessage({
       type: 'IFRAME_MINIMIZE',
@@ -15,7 +17,7 @@ const startTourGuide = (steps: Step[]) => {
 
   const tourGuide = new Tourguide({
     onStart: iframeMinimize,
-    steps,
+    steps: cleanedSteps,
     onStop: iframeMaximize,
     onComplete: iframeMaximize,
   });
