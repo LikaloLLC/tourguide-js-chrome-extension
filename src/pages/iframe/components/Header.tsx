@@ -1,4 +1,5 @@
 import React from 'react';
+import { getCurrentUrl } from '../../../utils/getCurrentUrl';
 
 import { useIframeContext } from '../contexts/iframeContext';
 
@@ -18,12 +19,23 @@ export const Header = () => {
     });
   };
 
-  function recordingFinish() {
+  function showingPreview() {
+    chrome.runtime.sendMessage({
+      type: 'SHOWING_PREVIEW',
+      payload: {
+        doc: iframeContext.state.doc,
+      },
+    });
+  }
+
+  async function recordingFinish() {
     chrome.runtime.sendMessage({
       type: 'RECORDING_FINISH',
       payload: {
-        description: window.location.href,
-        doc: iframeContext.state.doc,
+        description: await getCurrentUrl(),
+        doc: {
+          steps: iframeContext.state.doc,
+        },
         name: iframeContext.state.name,
       },
     });
@@ -33,18 +45,10 @@ export const Header = () => {
     chrome.runtime.sendMessage({
       type: 'IFRAME_MAXIMIZE',
     });
-
-    iframeContext.dispatch({
-      type: 'IFRAME_MAXIMIZE',
-    });
   };
 
   const iframeMinimize = () => {
     chrome.runtime.sendMessage({
-      type: 'IFRAME_MINIMIZE',
-    });
-
-    iframeContext.dispatch({
       type: 'IFRAME_MINIMIZE',
     });
   };
@@ -55,6 +59,26 @@ export const Header = () => {
       payload: value,
     });
   };
+
+  chrome.runtime.onMessage.addListener((message) => {
+    console.log('OnMessage - Header:', message);
+
+    switch (message.type) {
+      case 'IFRAME_MAXIMIZE': {
+        iframeContext.dispatch({
+          type: 'IFRAME_MAXIMIZE',
+        });
+        break;
+      }
+
+      case 'IFRAME_MINIMIZE': {
+        iframeContext.dispatch({
+          type: 'IFRAME_MINIMIZE',
+        });
+        break;
+      }
+    }
+  });
 
   if (iframeContext.state.minimized) {
     return (
@@ -95,7 +119,7 @@ export const Header = () => {
               Start recording
             </button>
             <button className="btn btn-outline-secondary" onClick={() => recordingCancel()}>
-              Cancel
+              Discard
             </button>
           </>
         ) : (
@@ -104,7 +128,10 @@ export const Header = () => {
               Minimize
             </button>
             <button className="btn btn-outline-secondary" onClick={() => recordingCancel()}>
-              Cancel
+              Discard
+            </button>
+            <button className="btn btn-secondary" onClick={() => showingPreview()}>
+              Preview
             </button>
             <button className="btn btn-primary" onClick={() => recordingFinish()}>
               Finish recording

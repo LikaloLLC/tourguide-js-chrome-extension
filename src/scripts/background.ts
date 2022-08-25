@@ -7,12 +7,21 @@ const editOnTab: {
   };
 } = {};
 
-chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
+let memoUrl = '';
+let state = { doc: { steps: <Step[]>[] }, name: '', description: '' };
+
+chrome.runtime.onMessageExternal.addListener((message) => {
+  console.log('onMessageExternal', message);
+
+  memoUrl = message.description;
+});
+
+chrome.runtime.onMessage.addListener(async (message, sender) => {
   console.log('onMessage', message);
 
   switch (message.type) {
     case 'EDIT_ON_SITE': {
-      const tab = await chrome.tabs.create({ url: 'https://www.google.com/' });
+      const tab = await chrome.tabs.create({ url: memoUrl });
       editOnTab[tab.id] = message.payload;
       editOnTab[tab.id].openerTabId = sender.tab.id;
       break;
@@ -65,12 +74,28 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
       break;
     }
 
-    case 'RECORDING_FINISH': {
-      const openerTabId = editOnTab[sender.tab.id].openerTabId;
-      chrome.tabs.sendMessage(openerTabId, {
-        type: 'RECORDING_FINISH',
+    case 'SHOWING_PREVIEW': {
+      chrome.tabs.sendMessage(sender.tab.id, {
+        type: 'SHOWING_PREVIEW',
         payload: message.payload,
       });
+      break;
+    }
+
+    case 'RECORDING_FINISH': {
+      const openerTabId = editOnTab[sender.tab.id].openerTabId;
+      state = message.payload;
+
+      chrome.scripting.executeScript({
+        target: { tabId: openerTabId },
+        func: (state) => {
+          this.window.addEventListener('click', function () {
+            this.dispatchEvent(new CustomEvent('data', { bubbles: true, detail: state }));
+          });
+        },
+        args: [state],
+      });
+
       chrome.tabs.update(openerTabId, { highlighted: true });
       chrome.tabs.remove(sender.tab.id);
       break;
@@ -82,7 +107,7 @@ chrome.webNavigation.onCompleted.addListener((details) => {
   if (details.frameId === 0 && editOnTab[details.tabId]) {
     chrome.scripting.executeScript({
       target: { tabId: details.tabId },
-      files: ['/scripts/iframe.js', '/scripts/picker.js'],
+      files: ['/scripts/iframe.js', '/scripts/picker.js', '/scripts/preview.js'],
     });
   }
 });

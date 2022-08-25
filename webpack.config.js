@@ -8,6 +8,7 @@ module.exports = {
     'scripts/docsie': './src/scripts/docsie.ts',
     'scripts/iframe': './src/scripts/iframe.ts',
     'scripts/picker': './src/scripts/picker.ts',
+    'scripts/preview': './src/scripts/preview.ts',
   },
   output: {
     clean: true,

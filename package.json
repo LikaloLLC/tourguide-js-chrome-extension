@@ -4,7 +4,8 @@
   "description": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack"
+    "build": "webpack",
+    "devw": "webpack --watch"
   },
   "dependencies": {
     "bootstrap": "^4.6.0",
@@ -12,7 +13,8 @@
     "immer": "^9.0.15",
     "pick-dom-element": "github:bordot/pick-dom-element",
     "react": "^18.1.0",
-    "react-dom": "^18.1.0"
+    "react-dom": "^18.1.0",
+    "tourguidejs": "^0.3.0"
   },
   "devDependencies": {
     "@types/chrome": "^0.0.190",

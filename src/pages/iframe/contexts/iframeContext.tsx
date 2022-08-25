@@ -89,12 +89,17 @@ const reducer = (state: IframeContextState, action: IframeContextActions) =>
       }
 
       case 'STEP_ADD': {
-        draft.doc.push({ title: '', content: '', selector: '' });
+        draft.doc.push({ step: draft.doc.length + 1, image: null, title: '', content: '', selector: '' });
         break;
       }
 
       case 'STEP_REMOVE': {
         draft.doc.splice(action.payload, 1);
+        draft.doc = draft.doc.map((steps: Step, index) => {
+          steps.step = index + 1;
+
+          return steps;
+        });
         break;
       }
       case 'STEP_UPDATE': {
