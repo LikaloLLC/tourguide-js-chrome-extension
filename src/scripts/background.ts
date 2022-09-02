@@ -17,11 +17,11 @@ chrome.runtime.onMessageExternal.addListener((message) => {
 });
 
 chrome.runtime.onMessage.addListener(async (message, sender) => {
-  console.log('onMessage', message);
+  // console.log('onMessage', message);
 
   switch (message.type) {
     case 'EDIT_ON_SITE': {
-      const tab = await chrome.tabs.create({ url: memoUrl });
+      const tab = await chrome.tabs.create({ url: memoUrl || "https://www.google.com/" });
       editOnTab[tab.id] = message.payload;
       editOnTab[tab.id].openerTabId = sender.tab.id;
       break;

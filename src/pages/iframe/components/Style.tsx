@@ -13,7 +13,7 @@ export const Style = () => {
 .card-deck {
 	overflow-x: auto;
 	flex-wrap: nowrap;
-	margin: 1rem 0;
+	padding: 1rem;
 	padding-bottom:1rem;
 }
 
