@@ -15,9 +15,9 @@
       "24": "images/icon-24.png",
       "32": "images/icon-32.png"
     },
-    "default_title": "Docsie tour builder"
+    "default_title": "Docsie Product Tours - Tour Guide"
   },
-  "description": "Easily build, update and manage Docsie tourguides",
+  "description": "Easily build, publish, update and maintain product tours in Docsie",
   "background": {
     "service_worker": "scripts/background.js"
   },
