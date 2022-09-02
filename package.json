@@ -1,7 +1,7 @@
 {
   "name": "tourguide-js-chrome-extension",
   "version": "1.0.3",
-  "description": "Easily build, update and manage Docsie tourguides",
+  "description": "Easily build, publish, update and maintain product tours in Docsie",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
