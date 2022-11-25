@@ -54,7 +54,7 @@ export const StepCard = (props: StepCardProps) => {
 
   return (
     <div className="card step">
-      <div className="card-header d-flex align-items-center">
+      <div className="card-header d-flex align-items-center dragHandle">
         <div>
           <span>Step {props.index + 1}</span>
         </div>

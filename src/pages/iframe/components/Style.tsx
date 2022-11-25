@@ -42,7 +42,7 @@ export const Style = () => {
 
 .card.step .card-header {
 	font-size: 80%;
-	
+	cursor: move;
 }
 
 .card.disabled {
