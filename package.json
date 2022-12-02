@@ -1,6 +1,6 @@
 {
   "name": "tourguide-js-chrome-extension",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Easily build, publish, update and maintain product tours in Docsie",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -14,7 +14,8 @@
     "pick-dom-element": "github:bordot/pick-dom-element",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
-    "tourguidejs": "^0.3.0"
+    "react-sortablejs": "^6.1.4",
+    "tourguidejs": "^1.0.0"
   },
   "devDependencies": {
     "@types/chrome": "^0.0.190",

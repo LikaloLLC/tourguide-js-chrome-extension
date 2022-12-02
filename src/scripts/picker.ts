@@ -1,11 +1,13 @@
 import { getCssSelector } from 'css-selector-generator';
 import { ElementPicker } from 'pick-dom-element';
+import { getMaxZIndex } from '../utils/getMaxZIndex';
 
 const picker = new ElementPicker({
-  borderColor: 'blue',
-  borderWidth: '3px',
+  borderColor: '#0d6efd',
+  borderWidth: '4px',
+  borderRadius: '2px',
   boxShadow: '0 0 0 max(100vh, 100vw) rgba(0, 0, 0, 0.4)',
-  zIndex: '200',
+  zIndex: (getMaxZIndex() + 1).toString(),
 });
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
