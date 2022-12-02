@@ -15,6 +15,7 @@ export const Style = () => {
 	flex-wrap: nowrap;
 	padding: 1rem;
 	padding-bottom:1rem;
+	height: calc(100vh - 45px);
 }
 
 .card.step {
