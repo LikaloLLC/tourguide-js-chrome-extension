@@ -1,5 +1,4 @@
 import Tourguide from 'tourguidejs';
-import '../styles/tourguide.css';
 
 const startTourGuide = (steps: Step[]) => {
   const cleanedSteps = steps.filter((step) => step.selector !== '');
@@ -10,6 +9,7 @@ const startTourGuide = (steps: Step[]) => {
     });
   };
   const iframeMaximize = () => {
+    tourGuide.deinit();
     chrome.runtime.sendMessage({
       type: 'IFRAME_MAXIMIZE',
     });
