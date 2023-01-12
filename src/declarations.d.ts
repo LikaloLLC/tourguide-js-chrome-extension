@@ -15,6 +15,8 @@ interface Step {
   actions?: [] | Action[];
   width?: number;
   height?: number;
+  overlay?: boolean;
+  navigation?: boolean;
 }
 
 interface StepWithId {
@@ -28,5 +30,7 @@ interface StepWithId {
   actions?: [] | Action[];
   width?: number;
   height?: number;  
+  overlay?: boolean;
+  navigation?: boolean;
 }
 declare module 'tourguidejs';

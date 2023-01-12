@@ -53,6 +53,16 @@ button.onclick = () => {
       step.height = height;
     }
 
+    const overlay = newContainer.querySelector<HTMLInputElement>("#overlay").checked;
+    if (!overlay) {
+      step.overlay = overlay;
+    }
+
+    const navigation = newContainer.querySelector<HTMLInputElement>("#navigation").checked;
+    if (!navigation) {
+      step.navigation = navigation;
+    }
+
     const close = newContainer.querySelector<HTMLButtonElement>('#step-container-close-btn');
     close.click();
 
