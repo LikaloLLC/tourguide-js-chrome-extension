@@ -12,7 +12,7 @@ interface Step {
   selector: string;
   image: null | string;
   layout: "horizontal" | "vertical";
-  actions: [] | Action[];
+  actions?: [] | Action[];
 }
 
 interface StepWithId {
@@ -23,6 +23,6 @@ interface StepWithId {
   selector: string;
   image: null | string;
   layout: "horizontal" | "vertical";
-  actions: [] | Action[];
+  actions?: [] | Action[];
 }
 declare module 'tourguidejs';
