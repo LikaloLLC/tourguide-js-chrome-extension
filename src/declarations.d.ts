@@ -4,6 +4,7 @@ interface Step {
   content: string;
   selector: string;
   image: null | string;
+  layout: "horizontal" | "vertical";
 }
 
 interface StepWithId {
@@ -13,5 +14,6 @@ interface StepWithId {
   content: string;
   selector: string;
   image: null | string;
+  layout: "horizontal" | "vertical";
 }
 declare module 'tourguidejs';

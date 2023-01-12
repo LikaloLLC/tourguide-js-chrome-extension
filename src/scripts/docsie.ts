@@ -8,24 +8,29 @@ const button = document.createElement('button');
 button.className = 'docsie-button docsie-button-selected';
 button.onclick = () => {
   const doc = [...document.querySelectorAll<HTMLLIElement>('.docsie-tour-step-container')].map((container, index) => {
-    const step: Step = { step: index + 1, image: null, title: '', content: '', selector: '' };
+    const step: Step = { step: index + 1, image: null, layout: "vertical", title: '', content: '', selector: '' };
 
-    const edit = container.querySelector('.icon.icon--pencil').parentElement;
+    const edit = container.querySelector<HTMLButtonElement>('#step-container-edit-btn');
     edit.click();
+    const id = container.id;
+    const newContainer = document.querySelector(`#step-container-${id}`);
 
-    const title = container.querySelector<HTMLInputElement>('#title');
+    const title = newContainer.querySelector<HTMLInputElement>('#title');
     step.title = title.value;
 
-    const img = container.querySelector<HTMLInputElement>('img');
+    const img = newContainer.querySelector<HTMLInputElement>('img');
     step.image = img.src === 'https://via.placeholder.com/240x120' ? null : img.src;
 
-    const content = container.querySelector<HTMLTextAreaElement>('[id*=content]');
+    const layout =  newContainer.querySelector<HTMLInputElement>('#layout');
+    step.layout = step.image && layout.value === "horizontal" ? "horizontal" : "vertical";
+
+    const content = newContainer.querySelector<HTMLTextAreaElement>('[id*=content]');
     step.content = content.value;
 
-    const selector = container.querySelector<HTMLInputElement>('#selector');
+    const selector = newContainer.querySelector<HTMLInputElement>('#selector');
     step.selector = selector.value;
 
-    const close = container.querySelector('.icon.icon--close').parentElement;
+    const close = newContainer.querySelector<HTMLButtonElement>('#step-container-close-btn');
     close.click();
 
     return step;
