@@ -1,3 +1,10 @@
+interface Action {
+	label: string;
+	action: "next" | "previous" | "stop" | string;
+	primary?: boolean;
+	[key: string]: any;
+}
+
 interface Step {
   step: number;
   title: string;
@@ -5,6 +12,7 @@ interface Step {
   selector: string;
   image: null | string;
   layout: "horizontal" | "vertical";
+  actions: [] | Action[];
 }
 
 interface StepWithId {
@@ -15,5 +23,6 @@ interface StepWithId {
   selector: string;
   image: null | string;
   layout: "horizontal" | "vertical";
+  actions: [] | Action[];
 }
 declare module 'tourguidejs';

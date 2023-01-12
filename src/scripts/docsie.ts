@@ -8,7 +8,7 @@ const button = document.createElement('button');
 button.className = 'docsie-button docsie-button-selected';
 button.onclick = () => {
   const doc = [...document.querySelectorAll<HTMLLIElement>('.docsie-tour-step-container')].map((container, index) => {
-    const step: Step = { step: index + 1, image: null, layout: "vertical", title: '', content: '', selector: '' };
+    const step: Step = { step: index + 1, image: null, layout: "vertical", title: '', content: '', actions: [], selector: '' };
 
     const edit = container.querySelector<HTMLButtonElement>('#step-container-edit-btn');
     edit.click();
@@ -26,6 +26,13 @@ button.onclick = () => {
 
     const content = newContainer.querySelector<HTMLTextAreaElement>('[id*=content]');
     step.content = content.value;
+
+    step.actions = [...newContainer.querySelectorAll<HTMLDivElement>(".docsie-tour-actions")].map((element, index) => {
+      const label = element.querySelector<HTMLInputElement>(`input#actions-label-${index + 1}`).value;
+      const action = element.querySelector<HTMLSelectElement>(`select#actions-action-${index + 1}`).value;
+      
+      return <Action>{label, action};
+    });
 
     const selector = newContainer.querySelector<HTMLInputElement>('#selector');
     step.selector = selector.value;
