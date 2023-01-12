@@ -43,6 +43,16 @@ button.onclick = () => {
     const selector = newContainer.querySelector<HTMLInputElement>('#selector');
     step.selector = selector.value;
 
+    const width = newContainer.querySelector<HTMLInputElement>("#width").valueAsNumber;
+    if (width) {
+      step.width = width;
+    }
+
+    const height = newContainer.querySelector<HTMLInputElement>("#height").valueAsNumber;
+    if (height) {
+      step.height = height;
+    }
+
     const close = newContainer.querySelector<HTMLButtonElement>('#step-container-close-btn');
     close.click();
 

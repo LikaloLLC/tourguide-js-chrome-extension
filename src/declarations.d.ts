@@ -13,6 +13,8 @@ interface Step {
   image: null | string;
   layout: "horizontal" | "vertical";
   actions?: [] | Action[];
+  width?: number;
+  height?: number;
 }
 
 interface StepWithId {
@@ -24,5 +26,7 @@ interface StepWithId {
   image: null | string;
   layout: "horizontal" | "vertical";
   actions?: [] | Action[];
+  width?: number;
+  height?: number;  
 }
 declare module 'tourguidejs';
