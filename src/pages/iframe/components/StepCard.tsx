@@ -1,8 +1,8 @@
-import React, { useRef } from 'react';
-
-import { wrapText } from '../../../utils/wrapText';
+import React from 'react';
 
 import { useIframeContext } from '../contexts/iframeContext';
+
+import Editor from './Editor/Editor';
 
 type StepCardProps = {
   index: number;
@@ -11,8 +11,6 @@ type StepCardProps = {
 
 export const StepCard = (props: StepCardProps) => {
   const iframeContext = useIframeContext();
-
-  const textareaRef = useRef<HTMLTextAreaElement>();
 
   const onClickRemove = () => {
     iframeContext.dispatch({
@@ -37,15 +35,9 @@ export const StepCard = (props: StepCardProps) => {
     });
   };
 
-  const onClickWrap = (openTag: string, closeTag: string) => {
-    onChange({ content: wrapText(textareaRef.current, openTag, closeTag) });
-    textareaRef.current.focus();
-  };
-
   const onChange = (
     value:
       | { title: string }
-      | { content: string }
       | { layout: 'horizontal' | 'vertical' }
       | { selector: string }
       | { width: number }
@@ -110,170 +102,7 @@ export const StepCard = (props: StepCardProps) => {
                 style={{ width: '100%' }}
               />
             </div>
-            <nav className="docsie-menu docsie-menu-horizontal" style={{ justifyContent: 'space-between' }}>
-              <ul className="docsie-menu-list docsie-u">
-                <li className="docsie-menu-item docsie-button-group">
-                  <button
-                    className="docsie-button docsie-button-icon"
-                    aria-label="Bold (Ctrl + b)"
-                    onClick={(event) => {
-                      event.preventDefault();
-                      onClickWrap('<b>', '</b>');
-                    }}
-                  >
-                    <svg className="icon icon--bold " viewBox="0 0 20 20" width="16" height="16">
-                      <use
-                        fill="currentColor"
-                        stroke="none"
-                        xmlnsXlink="http://www.w3.org/1999/xlink"
-                        xlinkHref="#icon-bold"
-                      />
-                    </svg>
-                  </button>
-                </li>
-                <li className="docsie-menu-item docsie-button-group">
-                  <button
-                    className="docsie-button docsie-button-icon"
-                    aria-label="Italic (Ctrl + i)"
-                    onClick={(event) => {
-                      event.preventDefault();
-                      onClickWrap('<i>', '</i>');
-                    }}
-                  >
-                    <svg className="icon icon--italic" viewBox="0 0 20 20" width="16" height="16">
-                      <use xmlnsXlink="http://www.w3.org/1999/xlink" xlinkHref="#icon-italic" />
-                    </svg>
-                  </button>
-                </li>
-                <li className="docsie-menu-item docsie-button-group">
-                  <button
-                    className="docsie-button docsie-button-icon"
-                    aria-label="Underline (Ctrl + u)"
-                    onClick={(event) => {
-                      event.preventDefault();
-                      onClickWrap('<u>', '</u>');
-                    }}
-                  >
-                    <svg className="icon icon--underline " viewBox="0 0 20 20" width="16" height="16">
-                      <use xmlnsXlink="http://www.w3.org/1999/xlink" xlinkHref="#icon-underline" />
-                    </svg>
-                  </button>
-                </li>
-                <li className="docsie-menu-item docsie-button-group">
-                  <button
-                    className="docsie-button   docsie-button-icon"
-                    aria-label="Code"
-                    onClick={(event) => {
-                      event.preventDefault();
-                      onClickWrap('<code>', '</code>');
-                    }}
-                  >
-                    <svg className="icon icon--code " viewBox="0 0 20 20" width="16" height="16">
-                      <use xmlnsXlink="http://www.w3.org/1999/xlink" xlinkHref="#icon-code" />
-                    </svg>
-                  </button>
-                </li>
-                <li className="docsie-menu-item docsie-button-group">
-                  <button
-                    className="docsie-button   docsie-button-icon"
-                    aria-label="Mark"
-                    onClick={(event) => {
-                      event.preventDefault();
-                      onClickWrap('<mark>', '</mark>');
-                    }}
-                  >
-                    <svg className="icon icon--brakets2 " viewBox="0 0 20 20" width="16" height="16">
-                      <use xmlnsXlink="http://www.w3.org/1999/xlink" xlinkHref="#icon-brakets2" />
-                    </svg>
-                  </button>
-                </li>
-                <li className="docsie-menu-item docsie-button-group">
-                  <button
-                    className="docsie-button   docsie-button-icon"
-                    aria-label="DFN"
-                    onClick={(event) => {
-                      event.preventDefault();
-                      onClickWrap('<dfn>', '</dfn>');
-                    }}
-                  >
-                    <svg className="icon icon--brakets " viewBox="0 0 20 20" width="16" height="16">
-                      <use xmlnsXlink="http://www.w3.org/1999/xlink" xlinkHref="#icon-brakets" />
-                    </svg>
-                  </button>
-                </li>
-                <li className="docsie-menu-item docsie-button-group">
-                  <button
-                    className="docsie-button   docsie-button-icon"
-                    aria-label="Keyboard"
-                    onClick={(event) => {
-                      event.preventDefault();
-                      onClickWrap('<kbd>', '</kbd>');
-                    }}
-                  >
-                    <svg className="icon icon--key " viewBox="0 0 20 20" width="16" height="16">
-                      <use xmlnsXlink="http://www.w3.org/1999/xlink" xlinkHref="#icon-key" />
-                    </svg>
-                  </button>
-                </li>
-              </ul>
-              <ul className="docsie-menu-list">
-                <li>
-                  <button
-                    className={`docsie-button docsie-button-icon ${
-                      props.step.layout === 'vertical' && 'docsie-button-selected'
-                    }`}
-                    aria-label="Vertical Layout"
-                    onClick={(event) => {
-                      event.preventDefault();
-                      onChange({ layout: 'vertical' });
-                    }}
-                  >
-                    <svg className="icon icon--step-vertical " viewBox="0 0 20 20" width="16" height="16">
-                      <use xmlnsXlink="http://www.w3.org/1999/xlink" xlinkHref="#icon-step-vertical" />
-                    </svg>
-                  </button>
-                </li>
-                <li>
-                  <button
-                    className={`docsie-button docsie-button-icon ${
-                      props.step.layout === 'horizontal' && 'docsie-button-selected'
-                    }`}
-                    aria-label="Horizontal Layout"
-                    onClick={(event) => {
-                      event.preventDefault();
-                      onChange({ layout: 'horizontal' });
-                    }}
-                  >
-                    <svg className="icon icon--step-horizontal " viewBox="0 0 20 20" width="16" height="16">
-                      <use xmlnsXlink="http://www.w3.org/1999/xlink" xlinkHref="#icon-step-horizontal" />
-                    </svg>
-                  </button>
-                </li>
-                <div className="docsie-g">
-                  <input
-                    type="hidden"
-                    className="docsie-u "
-                    id="layout"
-                    name="layout"
-                    autoComplete="off"
-                    value="horizontal"
-                  />
-                </div>
-              </ul>
-            </nav>
-            <div className="form-group">
-              <label className="sr-only" htmlFor="content">
-                Step content
-              </label>
-              <textarea
-                ref={textareaRef}
-                name="content"
-                placeholder="Step content"
-                className="form-control"
-                value={props.step.content}
-                onChange={(event) => onChange({ content: event.currentTarget.value })}
-              ></textarea>
-            </div>
+            <Editor defaultContent={props.step.content} index={props.index} />
             {props.step.actions && (
               <div className="form-group">
                 <span>
