@@ -55,14 +55,14 @@ export const StepCard = (props: StepCardProps) => {
   };
 
   return (
-    <div className="pure docsie docsie-blue" id={`step-container-${props.index}`}>
+    <div className="pure docsie docsie-blue dragHandle" id={`step-container-${props.index}`}>
       <div
         className="docsie-dialog step-card-container"
         style={{ width: 'min-content', minWidth: 'min-content', margin: 0 }}
       >
         <div
           className="docsie-dialog-header style-container"
-          style={{ padding: '1em 1em 0 1em', justifyContent: 'space-between' }}
+          style={{ padding: '1em 1em 0 1em', justifyContent: 'space-between', cursor: 'move' }}
         >
           <div className="box"></div>
           <svg className="icon icon--tour " viewBox="0 0 20 20" width="32" height="32">

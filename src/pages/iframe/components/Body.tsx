@@ -62,7 +62,7 @@ export const Body = () => {
               onEnd={({ oldIndex, newIndex }) => onDragDropEnds(oldIndex, newIndex)}
             >
               {list.map((step, i) => (
-                <StepCard key={i} index={i} step={step} />
+                <StepCard key={step.title + i} index={i} step={step} />
               ))}
             </ReactSortable>
             <StepCardAdd />
