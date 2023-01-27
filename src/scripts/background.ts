@@ -7,13 +7,12 @@ const editOnTab: {
   };
 } = {};
 
-let memoUrl = '';
 let state = { doc: { steps: <Step[]>[] }, name: '', description: '' };
 
 chrome.runtime.onMessageExternal.addListener((message) => {
   console.log('onMessageExternal', message);
 
-  memoUrl = message.description;
+  state = { doc: message.doc, name: message.name, description: message.description };
 });
 
 chrome.runtime.onMessage.addListener(async (message, sender) => {
@@ -21,8 +20,13 @@ chrome.runtime.onMessage.addListener(async (message, sender) => {
 
   switch (message.type) {
     case 'EDIT_ON_SITE': {
-      const tab = await chrome.tabs.create({ url: memoUrl || "https://www.google.com/" });
-      editOnTab[tab.id] = message.payload;
+      const tab = await chrome.tabs.create({ url: state.description || 'https://www.google.com/' });
+      editOnTab[tab.id] = {
+        openerTabId: tab.id,
+        doc: state.doc.steps,
+        name: state.name,
+        description: state.description,
+      };
       editOnTab[tab.id].openerTabId = sender.tab.id;
       break;
     }
