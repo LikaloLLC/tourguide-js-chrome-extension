@@ -5,6 +5,7 @@ type IframeContextState = {
   doc: Step[];
   name: string;
   description: string;
+  version: number;
   minimized: boolean;
   recording: boolean;
   targeting: number;
@@ -53,12 +54,17 @@ type IframeContextActions =
   | {
       type: 'TARGETING_UPDATE';
       payload: number;
+    }
+  | {
+      type: 'VERSION_SET';
+      payload: number;
     };
 
 const initialState: IframeContextState = {
   doc: null,
   name: null,
   description: null,
+  version: null,
   minimized: false,
   recording: null,
   targeting: null,
@@ -119,6 +125,11 @@ const reducer = (state: IframeContextState, action: IframeContextActions) =>
 
       case 'RECORDING_UPDATE': {
         draft.recording = action.payload;
+        break;
+      }
+
+      case 'VERSION_SET': {
+        draft.version = action.payload;
         break;
       }
     }

@@ -4,15 +4,21 @@ const editOnTab: {
     doc: Step[];
     name: string;
     description: string;
+    version: number;
   };
 } = {};
 
-let state = { doc: { steps: <Step[]>[] }, name: '', description: '' };
+let state = { doc: { steps: <Step[]>[] }, name: '', description: '', version: 2 };
 
 chrome.runtime.onMessageExternal.addListener((message) => {
   console.log('onMessageExternal', message);
 
-  state = { doc: message.doc, name: message.name, description: message.description };
+  state = {
+    doc: message.doc,
+    name: message.name,
+    description: message.description,
+    version: message.version,
+  };
 });
 
 chrome.runtime.onMessage.addListener(async (message, sender) => {
@@ -26,6 +32,7 @@ chrome.runtime.onMessage.addListener(async (message, sender) => {
         doc: state.doc.steps,
         name: state.name,
         description: state.description,
+        version: state.version,
       };
       editOnTab[tab.id].openerTabId = sender.tab.id;
       break;
