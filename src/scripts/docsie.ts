@@ -6,80 +6,9 @@ li.dataset.component = 'headertoolbaraction';
 
 const button = document.createElement('button');
 button.className = 'docsie-button docsie-button-selected';
+
 button.onclick = () => {
-  const doc = [...document.querySelectorAll<HTMLLIElement>('.docsie-tour-step-container')].map((container, index) => {
-    const step: Step = { step: index + 1, image: null, layout: "vertical", title: '', content: '', selector: '' };
-
-    const edit = container.querySelector<HTMLButtonElement>('#step-container-edit-btn');
-    edit.click();
-    const id = container.id;
-    const newContainer = document.querySelector(`#step-container-${id}`);
-
-    const title = newContainer.querySelector<HTMLInputElement>('#title');
-    step.title = title.value;
-
-    const img = newContainer.querySelector<HTMLInputElement>('img');
-    step.image = img.src === 'https://via.placeholder.com/240x120' ? null : img.src;
-
-    const layout =  newContainer.querySelector<HTMLInputElement>('#layout');
-    step.layout = step.image && layout.value === "horizontal" ? "horizontal" : "vertical";
-
-    const content = newContainer.querySelector<HTMLTextAreaElement>('[id*=content]');
-    step.content = content.value;
-
-    const actions = [...newContainer.querySelectorAll<HTMLDivElement>(".docsie-tour-actions")].map((element, index) => {
-      const label = element.querySelector<HTMLInputElement>(`input#actions-label-${index + 1}`).value;
-      const action = element.querySelector<HTMLSelectElement>(`select#actions-action-${index + 1}`).value;
-      
-      if (label && action) {
-        return <Action>{label, action};
-      }
-    });
-
-    if(Boolean(...actions)) {
-      step.actions = actions;
-    }
-
-    const selector = newContainer.querySelector<HTMLInputElement>('#selector');
-    step.selector = selector.value;
-
-    const width = newContainer.querySelector<HTMLInputElement>("#width").valueAsNumber;
-    if (width) {
-      step.width = width;
-    }
-
-    const height = newContainer.querySelector<HTMLInputElement>("#height").valueAsNumber;
-    if (height) {
-      step.height = height;
-    }
-
-    const overlay = newContainer.querySelector<HTMLInputElement>("#overlay").checked;
-    if (!overlay) {
-      step.overlay = overlay;
-    }
-
-    const navigation = newContainer.querySelector<HTMLInputElement>("#navigation").checked;
-    if (!navigation) {
-      step.navigation = navigation;
-    }
-
-    const close = newContainer.querySelector<HTMLButtonElement>('#step-container-close-btn');
-    close.click();
-
-    return step;
-  });
-
-  const name = document.querySelector<HTMLInputElement>('#name').value;
-  const description = '';
-
-  chrome.runtime.sendMessage({
-    type: 'EDIT_ON_SITE',
-    payload: {
-      doc,
-      name,
-      description,
-    },
-  });
+  chrome.runtime.sendMessage({ type: 'EDIT_ON_SITE' });
 };
 
 const span = document.createElement('span');

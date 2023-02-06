@@ -1,8 +1,8 @@
 interface Action {
-	label: string;
-	action: "next" | "previous" | "stop" | string;
-	primary?: boolean;
-	[key: string]: any;
+  label: string;
+  action: 'next' | 'previous' | 'stop' | string;
+  primary?: boolean;
+  [key: string]: any;
 }
 
 interface Step {
@@ -11,7 +11,7 @@ interface Step {
   content: string;
   selector: string;
   image: null | string;
-  layout: "horizontal" | "vertical";
+  layout?: 'horizontal' | 'vertical';
   actions?: [] | Action[];
   width?: number;
   height?: number;
@@ -19,18 +19,7 @@ interface Step {
   navigation?: boolean;
 }
 
-interface StepWithId {
+interface StepWithId extends Step {
   id: string;
-  step: number;
-  title: string;
-  content: string;
-  selector: string;
-  image: null | string;
-  layout: "horizontal" | "vertical";
-  actions?: [] | Action[];
-  width?: number;
-  height?: number;  
-  overlay?: boolean;
-  navigation?: boolean;
 }
 declare module 'tourguidejs';
