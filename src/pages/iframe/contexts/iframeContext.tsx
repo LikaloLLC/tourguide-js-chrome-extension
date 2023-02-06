@@ -5,6 +5,7 @@ type IframeContextState = {
   doc: Step[];
   name: string;
   description: string;
+  version: number;
   minimized: boolean;
   recording: boolean;
   targeting: number;
@@ -26,7 +27,7 @@ type IframeContextActions =
   | {
       type: 'STEP_UPDATE';
       payload: {
-        change: { [k: string]: string };
+        change: { [k: string]: string | number | boolean };
         index: number;
       };
     }
@@ -53,12 +54,17 @@ type IframeContextActions =
   | {
       type: 'TARGETING_UPDATE';
       payload: number;
+    }
+  | {
+      type: 'VERSION_SET';
+      payload: number;
     };
 
 const initialState: IframeContextState = {
   doc: null,
   name: null,
   description: null,
+  version: null,
   minimized: false,
   recording: null,
   targeting: null,
@@ -89,7 +95,14 @@ const reducer = (state: IframeContextState, action: IframeContextActions) =>
       }
 
       case 'STEP_ADD': {
-        draft.doc.push({ step: draft.doc.length + 1, image: null, title: '', content: '', selector: '' });
+        draft.doc.push({
+          step: draft.doc.length + 1,
+          image: null,
+          layout: 'vertical',
+          title: '',
+          content: '',
+          selector: '',
+        });
         break;
       }
 
@@ -112,6 +125,11 @@ const reducer = (state: IframeContextState, action: IframeContextActions) =>
 
       case 'RECORDING_UPDATE': {
         draft.recording = action.payload;
+        break;
+      }
+
+      case 'VERSION_SET': {
+        draft.version = action.payload;
         break;
       }
     }

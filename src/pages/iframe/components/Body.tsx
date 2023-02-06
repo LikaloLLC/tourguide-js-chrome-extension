@@ -58,7 +58,7 @@ export const Body = () => {
               handle=".dragHandle"
               swapThreshold={0.65}
               setList={() => {}}
-              style={{ display: 'flex' }}
+              style={{ display: 'flex', columnGap: 16 }}
               onEnd={({ oldIndex, newIndex }) => onDragDropEnds(oldIndex, newIndex)}
             >
               {list.map((step, i) => (

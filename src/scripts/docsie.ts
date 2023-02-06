@@ -6,42 +6,9 @@ li.dataset.component = 'headertoolbaraction';
 
 const button = document.createElement('button');
 button.className = 'docsie-button docsie-button-selected';
+
 button.onclick = () => {
-  const doc = [...document.querySelectorAll<HTMLLIElement>('.docsie-tour-step-container')].map((container, index) => {
-    const step: Step = { step: index + 1, image: null, title: '', content: '', selector: '' };
-
-    const edit = container.querySelector('.icon.icon--pencil').parentElement;
-    edit.click();
-
-    const title = container.querySelector<HTMLInputElement>('#title');
-    step.title = title.value;
-
-    const img = container.querySelector<HTMLInputElement>('img');
-    step.image = img.src === 'https://via.placeholder.com/240x120' ? null : img.src;
-
-    const content = container.querySelector<HTMLTextAreaElement>('[id*=content]');
-    step.content = content.value;
-
-    const selector = container.querySelector<HTMLInputElement>('#selector');
-    step.selector = selector.value;
-
-    const close = container.querySelector('.icon.icon--close').parentElement;
-    close.click();
-
-    return step;
-  });
-
-  const name = document.querySelector<HTMLInputElement>('#name').value;
-  const description = '';
-
-  chrome.runtime.sendMessage({
-    type: 'EDIT_ON_SITE',
-    payload: {
-      doc,
-      name,
-      description,
-    },
-  });
+  chrome.runtime.sendMessage({ type: 'EDIT_ON_SITE' });
 };
 
 const span = document.createElement('span');

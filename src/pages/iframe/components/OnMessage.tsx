@@ -28,6 +28,12 @@ export const OnMessage = () => {
             type: 'NAME_UPDATE',
             payload: message.payload.name,
           });
+
+          iframeContext.dispatch({
+            type: 'VERSION_SET',
+            payload: message.payload.version,
+          });
+
           break;
         }
 

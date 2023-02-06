@@ -1,4 +1,4 @@
-To install packages run: `run npm i`  
+To install packages run: `npm i`  
 To build the extension run `npm run build`  
 To enable the watch mode, run: `npm run devw`.
 
