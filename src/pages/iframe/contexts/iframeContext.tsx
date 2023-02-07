@@ -101,7 +101,7 @@ const reducer = (state: IframeContextState, action: IframeContextActions) =>
           layout: 'vertical',
           title: '',
           content: '',
-          selector: '',
+          selector: null,
         });
         break;
       }
