@@ -5,10 +5,17 @@ const editOnTab: {
     name: string;
     description: string;
     version: number;
+    workspaceImages: WorkspaceImages[];
   };
 } = {};
 
-let state = { doc: { steps: <Step[]>[] }, name: '', description: '', version: 2 };
+let state = {
+  doc: { steps: <Step[]>[] },
+  name: '',
+  description: '',
+  version: 2,
+  workspaceImages: <WorkspaceImages[]>[],
+};
 
 chrome.runtime.onMessageExternal.addListener((message) => {
   console.log('onMessageExternal', message);
@@ -18,6 +25,7 @@ chrome.runtime.onMessageExternal.addListener((message) => {
     name: message.name,
     description: message.description,
     version: message.version,
+    workspaceImages: message.workspaceImages,
   };
 });
 
@@ -33,6 +41,7 @@ chrome.runtime.onMessage.addListener(async (message, sender) => {
         name: state.name,
         description: state.description,
         version: state.version,
+        workspaceImages: state.workspaceImages,
       };
       editOnTab[tab.id].openerTabId = sender.tab.id;
       break;

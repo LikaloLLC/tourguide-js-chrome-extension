@@ -6,6 +6,7 @@ type IframeContextState = {
   name: string;
   description: string;
   version: number;
+  workspaceImages: WorkspaceImages[];
   minimized: boolean;
   recording: boolean;
   targeting: number;
@@ -58,6 +59,10 @@ type IframeContextActions =
   | {
       type: 'VERSION_SET';
       payload: number;
+    }
+  | {
+      type: 'IMAGES_SET';
+      payload: WorkspaceImages[];
     };
 
 const initialState: IframeContextState = {
@@ -65,6 +70,7 @@ const initialState: IframeContextState = {
   name: null,
   description: null,
   version: null,
+  workspaceImages: [],
   minimized: false,
   recording: null,
   targeting: null,
@@ -130,6 +136,11 @@ const reducer = (state: IframeContextState, action: IframeContextActions) =>
 
       case 'VERSION_SET': {
         draft.version = action.payload;
+        break;
+      }
+
+      case 'IMAGES_SET': {
+        draft.workspaceImages = action.payload;
         break;
       }
     }

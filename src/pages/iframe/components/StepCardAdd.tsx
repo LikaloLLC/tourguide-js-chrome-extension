@@ -13,7 +13,7 @@ export const StepCardAdd = () => {
 
   return (
     <div className="card step">
-      <button className="btn btn-icon h-100" onClick={() => onClick()}>
+      <button className="btn btn-icon h-100 step-add" onClick={() => onClick()}>
         <svg className="icon-plus-circle" width="48" height="48" viewBox="0 0 20 20">
           <g fill="none" stroke="currentColor">
             <path d="M9 1h1v17H9z" />

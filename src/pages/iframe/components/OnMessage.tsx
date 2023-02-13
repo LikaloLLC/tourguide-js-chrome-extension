@@ -34,6 +34,11 @@ export const OnMessage = () => {
             payload: message.payload.version,
           });
 
+          iframeContext.dispatch({
+            type: 'IMAGES_SET',
+            payload: message.payload.workspaceImages,
+          });
+
           break;
         }
 

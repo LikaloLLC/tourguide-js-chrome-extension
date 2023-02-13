@@ -22,4 +22,11 @@ interface Step {
 interface StepWithId extends Step {
   id: string;
 }
+
+interface WorkspaceImages {
+  id: string;
+  name: string;
+  src: string;
+}
+
 declare module 'tourguidejs';
