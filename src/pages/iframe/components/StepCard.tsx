@@ -64,6 +64,15 @@ export const StepCard = (props: StepCardProps) => {
     });
   };
 
+  const onPreviewStep = () => {
+    chrome.runtime.sendMessage({
+      type: 'SHOWING_PREVIEW',
+      payload: {
+        doc: [props.step],
+      },
+    });
+  };
+
   if (iframeContext.state.version === 2) {
     return (
       <div className="card step">
@@ -187,7 +196,7 @@ export const StepCard = (props: StepCardProps) => {
     return (
       <div className="pure docsie docsie-blue" id={`step-container-${props.index}`}>
         <div
-          className="docsie-dialog step-card-container"
+          className="docsie-dialog step-card-container dragHandle"
           style={{ width: 'min-content', minWidth: 'min-content', margin: 0 }}
         >
           <div
@@ -198,14 +207,28 @@ export const StepCard = (props: StepCardProps) => {
             <svg className="icon icon--tour " viewBox="0 0 20 20" width="32" height="32">
               <use xmlnsXlink="http://www.w3.org/1999/xlink" xlinkHref="#icon-tour"></use>
             </svg>
-            <div>
-              <button className="btn btn-icon" onClick={() => onClickRemove()}>
-                <svg className="icon-trash" width="20" height="20" viewBox="0 0 20 20">
-                  <path d="M6.5 3V1.5h7V3M4.5 4v14.5h11V4" fill="none" stroke="currentColor" />
-                  <path fill="currentColor" d="M8 7h1v9H8zM11 7h1v9h-1zM2 3h16v1H2z" />
-                </svg>
-              </button>
-            </div>
+            <div className="box"></div>
+          </div>
+          <div
+            className="docsie-dialog-header style-container"
+            style={{ padding: '0 1.5em', justifyContent: 'space-between' }}
+          >
+            <button
+              onClick={onPreviewStep}
+              className="docsie-button docsie-button-icon docsie-button-ghost"
+              aria-label="Preview step"
+            >
+              <svg className="icon icon--preview" viewBox="0 0 20 20" width="20" height="20">
+                <use xmlnsXlink="http://www.w3.org/1999/xlink" xlinkHref="#icon-preview"></use>
+              </svg>
+            </button>
+            <div className="box"></div>
+            <button className="btn btn-icon" onClick={() => onClickRemove()}>
+              <svg className="icon-trash" width="20" height="20" viewBox="0 0 20 20">
+                <path d="M6.5 3V1.5h7V3M4.5 4v14.5h11V4" fill="none" stroke="currentColor" />
+                <path fill="currentColor" d="M8 7h1v9H8zM11 7h1v9h-1zM2 3h16v1H2z" />
+              </svg>
+            </button>
           </div>
           <div className="docsie-dialog-body">
             <form
