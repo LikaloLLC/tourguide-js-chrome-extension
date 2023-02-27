@@ -3,6 +3,7 @@ import React, { useRef } from 'react';
 import { wrapText } from '../../../utils/wrapText';
 
 import { useIframeContext } from '../contexts/iframeContext';
+import { ImagePicker } from './ImagePicker';
 
 import Editor from './Editor/Editor';
 
@@ -75,7 +76,7 @@ export const StepCard = (props: StepCardProps) => {
 
   if (iframeContext.state.version === 2) {
     return (
-      <div className="card step">
+      <div className="card step docsie">
         <div className="card-header d-flex align-items-center dragHandle">
           <div>
             <span>Step {props.index + 1}</span>
@@ -91,6 +92,9 @@ export const StepCard = (props: StepCardProps) => {
         </div>
         <div className="card-body">
           <form className="card-form">
+            <div className="form-group">
+              <ImagePicker stepPosition={props.index} srcValue={props.step.image} />
+            </div>
             <div className="form-group">
               <label className="sr-only" htmlFor="title">
                 Step title
