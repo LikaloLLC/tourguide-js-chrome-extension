@@ -1,14 +1,6 @@
-const editOnTab: {
-  [tabId: number]: {
-    openerTabId: number;
-    doc: Step[];
-    name: string;
-    description: string;
-  };
-} = {};
+import { getStorageContent, isTabOriginCorrect, setStorageContent } from '../utils/storageContent';
 
 let memoUrl = '';
-let state = { doc: { steps: <Step[]>[] }, name: '', description: '' };
 
 chrome.runtime.onMessageExternal.addListener((message) => {
   console.log('onMessageExternal', message);
@@ -21,16 +13,16 @@ chrome.runtime.onMessage.addListener(async (message, sender) => {
 
   switch (message.type) {
     case 'EDIT_ON_SITE': {
-      const tab = await chrome.tabs.create({ url: memoUrl || "https://www.google.com/" });
-      editOnTab[tab.id] = message.payload;
-      editOnTab[tab.id].openerTabId = sender.tab.id;
+      const tab = await chrome.tabs.create({ url: memoUrl || 'https://www.google.com/' });
+      setStorageContent(message.payload, tab.id, sender.tab.id);
       break;
     }
 
     case 'EDIT_ON_TAB': {
+      const [state, tabId] = await getStorageContent();
       chrome.tabs.sendMessage(sender.tab.id, {
         type: 'EDIT_ON_TAB',
-        payload: editOnTab[sender.tab.id],
+        payload: { ...state, tabId },
       });
       break;
     }
@@ -68,8 +60,8 @@ chrome.runtime.onMessage.addListener(async (message, sender) => {
     }
 
     case 'RECORDING_CANCEL': {
-      const openerTabId = editOnTab[sender.tab.id].openerTabId;
-      chrome.tabs.update(openerTabId, { highlighted: true });
+      const [state] = await getStorageContent();
+      chrome.tabs.update(state.openerTabId, { highlighted: true });
       chrome.tabs.remove(sender.tab.id);
       break;
     }
@@ -82,13 +74,25 @@ chrome.runtime.onMessage.addListener(async (message, sender) => {
       break;
     }
 
+    case 'SAVE_STATE': {
+      setStorageContent(message.payload);
+      break;
+    }
+
     case 'RECORDING_FINISH': {
-      const openerTabId = editOnTab[sender.tab.id].openerTabId;
-      state = message.payload;
+      const [storageContent] = await getStorageContent();
+      const { name, description, doc, openerTabId } = storageContent;
+      const state = {
+        name,
+        description,
+        doc: {
+          steps: doc,
+        },
+      };
 
       chrome.scripting.executeScript({
         target: { tabId: openerTabId },
-        func: (state) => {
+        func: function (state) {
           this.window.addEventListener('click', function () {
             this.dispatchEvent(new CustomEvent('data', { bubbles: true, detail: state }));
           });
@@ -98,13 +102,14 @@ chrome.runtime.onMessage.addListener(async (message, sender) => {
 
       chrome.tabs.update(openerTabId, { highlighted: true });
       chrome.tabs.remove(sender.tab.id);
+      chrome.storage.session.clear();
       break;
     }
   }
 });
 
-chrome.webNavigation.onCompleted.addListener((details) => {
-  if (details.frameId === 0 && editOnTab[details.tabId]) {
+chrome.webNavigation.onCompleted.addListener(async (details) => {
+  if (details.frameId === 0 && (await isTabOriginCorrect(details.tabId))) {
     chrome.scripting.executeScript({
       target: { tabId: details.tabId },
       files: ['/scripts/iframe.js', '/scripts/picker.js', '/scripts/preview.js'],
