@@ -18,6 +18,11 @@ export const Body = () => {
         };
       });
       setList(doc);
+
+      chrome.runtime.sendMessage({
+        type: 'SAVE_STATE',
+        payload: { doc },
+      });
     }
   }, [iframeContext.state?.doc]);
 

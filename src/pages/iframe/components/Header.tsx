@@ -1,6 +1,4 @@
 import React from 'react';
-import { getCurrentUrl } from '../../../utils/getCurrentUrl';
-
 import { useIframeContext } from '../contexts/iframeContext';
 
 export const Header = () => {
@@ -31,13 +29,6 @@ export const Header = () => {
   async function recordingFinish() {
     chrome.runtime.sendMessage({
       type: 'RECORDING_FINISH',
-      payload: {
-        description: await getCurrentUrl(),
-        doc: {
-          steps: iframeContext.state.doc,
-        },
-        name: iframeContext.state.name,
-      },
     });
   }
 
@@ -57,6 +48,11 @@ export const Header = () => {
     iframeContext.dispatch({
       type: 'NAME_UPDATE',
       payload: value,
+    });
+
+    chrome.runtime.sendMessage({
+      type: 'SAVE_STATE',
+      payload: { name: value },
     });
   };
 
