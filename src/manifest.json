@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Docsie Tour Guide",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "icons": {
     "16": "images/icon-16.png",
     "24": "images/icon-24.png",
@@ -23,42 +23,20 @@
   },
   "content_scripts": [
     {
-      "matches": [
-        "https://app.docsie.io/*",
-        "https://beta.docsie.io/*",
-        "https://staging.docsie.io/*"
-      ],
-      "js": [
-        "scripts/docsie.js"
-      ]
+      "matches": ["https://app.docsie.io/*", "https://beta.docsie.io/*", "https://staging.docsie.io/*"],
+      "js": ["scripts/docsie.js"]
     }
   ],
   "externally_connectable": {
-    "ids": [
-      "namnffimcbmhcpkllhaookfikmllhned"
-    ],
-    "matches": [
-      "https://app.docsie.io/*",
-      "https://beta.docsie.io/*",
-      "https://staging.docsie.io/*"
-    ]
+    "ids": ["namnffimcbmhcpkllhaookfikmllhned"],
+    "matches": ["https://app.docsie.io/*", "https://beta.docsie.io/*", "https://staging.docsie.io/*"]
   },
-  "permissions": [
-    "activeTab",
-    "scripting",
-    "webNavigation"
-  ],
-  "host_permissions": [
-    "<all_urls>"
-  ],
+  "permissions": ["activeTab", "scripting", "webNavigation", "storage"],
+  "host_permissions": ["<all_urls>"],
   "web_accessible_resources": [
     {
-      "resources": [
-        "pages/*/*.html"
-      ],
-      "matches": [
-        "<all_urls>"
-      ]
+      "resources": ["pages/*/*.html"],
+      "matches": ["<all_urls>"]
     }
   ]
 }
